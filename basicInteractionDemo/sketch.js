@@ -21,3 +21,11 @@ function mouseClicked() {
   fill(random(255), random(255), random(255), random(255));
   rect(mouseX, mouseY, random(0, 100), random(0, 100));
 }
+
+function deviceShaken() {
+  fill(0)
+  textAlign(CENTER)
+  textSize(32);
+  textFont("Georgia")
+  text("Shaken, not stirred.", random(width / 2), random(height / 2));
+}
