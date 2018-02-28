@@ -7,16 +7,71 @@
 // function at processing.org/reference.
 
 let state;
-let timeNow;
+let redLightDuration, yellowLightDuration, greenLightDuration;
+let lastTimeLightChanged;
 
 function setup() {
   createCanvas(600, 600);
+  state = 1;
+  redLightDuration = 2000;
+  yellowLightDuration = 1000;
+  greenLightDuration = 5000;
+  lastTimeLightChanged = millis();
 }
 
 function draw() {
   background(255);
   drawOutlineOfLights();
-  timeNow = millis();
+  checkIfLightSwitched();
+  displayCorrectLight();
+}
+
+function checkIfLightSwitched() {
+  if (state === 1) {
+    if (millis() > lastTimeLightChanged + redLightDuration) {
+      state = 2;
+      lastTimeLightChanged = millis();
+    }
+  }
+  if (state === 2) {
+    if (millis() > lastTimeLightChanged + yellowLightDuration) {
+      state = 3;
+      lastTimeLightChanged = millis();
+    }
+  }
+  if (state === 3) {
+    if (millis() > lastTimeLightChanged + greenLightDuration) {
+      state = 1;
+      lastTimeLightChanged = millis();
+    }
+  }
+}
+
+function displayCorrectLight() {
+  if (state === 1) {
+    drawRedLight();
+  }
+  else if (state === 2) {
+    drawYellowLight();
+  }
+  else if (state === 3) {
+    drawGreenLight();
+  }
+}
+
+function drawRedLight() {
+  fill(255, 0, 0);
+  ellipse(width / 2, height / 2 - 65, 50, 50); //top
+}
+
+function drawYellowLight() {
+  fill(255, 255, 0);
+  ellipse(width / 2, height / 2, 50, 50); //middle
+}
+
+function drawGreenLight() {
+  fill(0, 255, 0);
+  ellipse(width / 2, height / 2 + 65, 50, 50); //bottom
 }
 
 function drawOutlineOfLights() {
@@ -24,20 +79,5 @@ function drawOutlineOfLights() {
   rectMode(CENTER);
   fill(0);
   rect(width / 2, height / 2, 75, 200, 10);
-  if (timeNow % 5000) {
-    state = 0;
-  }
   //lights
-  if (state === 0) {
-    fill(255, 0, 0);
-    ellipse(width / 2, height / 2 - 65, 50, 50); //top
-  }
-  if (state === 1) {
-    fill(255, 255, 0);
-    ellipse(width / 2, height / 2, 50, 50); //middle
-  }
-  if (state === 3) {
-    fill(0, 255, 0);
-    ellipse(width / 2, height / 2 + 65, 50, 50); //bottom
-  }
 }
