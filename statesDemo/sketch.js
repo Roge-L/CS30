@@ -9,7 +9,7 @@ let dvd, dvdColor;
 let state;
 
 function preload() {
-  dvd = loadImage("images/logo.png");
+  dvd = loadImage("images/ball.png");
 }
 
 function setup() {
@@ -25,11 +25,15 @@ function setup() {
 
 function draw() {
   background(255);
+  displayStartScreen();
+}
+
+function displayStartScreen() {
   fill("green");
   rect(width / 2 - 250, height / 2 - 150, 500, 300);
-  textSize(40);
+  textSize(108);
   fill("white");
-  text("Play", width / 2 - 75, height / 2);
+  text("Play", width / 2 - 128, height / 2);
   if (state === 2) {
     background("white");
     moveThing();
