@@ -13,7 +13,7 @@ let timePassed;
 let state;
 let foodX, foodY;
 let points;
-let layer;
+let vidGameFont;
 
 // preloading images
 function preload() {
@@ -32,19 +32,18 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   booX = width / 2;
   booY = height / 2;
-  speed = 10;
+  speed = 6;
   rightOrLeft = 0;
-  burgerTime = 3000;
-  cherriesTime = 4000;
-  cookieTime = 2000;
-  iceCreamTime = 3000;
-  pizzaTime = 2000;
+  burgerTime = 1000;
+  cherriesTime = 1500;
+  cookieTime = 1000;
+  iceCreamTime = 1500;
+  pizzaTime = 1000;
   state = 1;//int(random(1,6));
-  foodX = random(300,width - 300);
-  foodY = random(300,height - 300);
+  foodX = random(300,width - 150);
+  foodY = random(300,height - 150);
   timePassed = 0;
   points = 0;
-  layer = 1;
 }
 
 // function that draws things 60 times/second
@@ -58,7 +57,7 @@ function draw() {
     speed += 1;
   }
   else {
-    speed = 10;
+    speed = 6;
   }
 
   let d = dist(booX, booY, foodX, foodY);
@@ -66,18 +65,19 @@ function draw() {
   // 59 is the boo's image height divided by 2 and 50 is each food's width or height divided by 2
   // these numbers are like radii, if the distance between them are smaller than their radii combined then they are touching
   if (d < 59  + 50) {
-      points += 1;
-      newFood();
-    }
-    texts();
+    points += 1;
+    newFood();
+  }
+  texts();
 }
 
 function texts() {
   textSize(86);
   textFont(vidGameFont);
   fill(255);
-  text("Points: " + points,80,200);
-  text("Time Remaining: " + 60, 80, 110);
+  text("Points: " + points,80,100);
+  textSize(24);
+  text("WASD controls, hold mouse to accelerate", 80, 150);
 }
 
 // WASD control creation
@@ -113,22 +113,18 @@ function keyPressed() {
   }
 }
 
-function startGame() {
-  layer = 2;
-}
-
 // function that changes to another food
 function newFood() {
   state = int(random(1,6));
   timePassed = millis();
-  foodX = random(300,width - 300);
-  foodY = random(300,height - 300);
+  foodX = random(300,width - 150);
+  foodY = random(300,height - 150);
 }
 
 // function that draws burger for an amount of time
 function drawBurger() {
   if (millis() <= timePassed + burgerTime) {
-    image(burger,foodX,foodY,[100],[100]);
+    image(burger,foodX,foodY,100,100);
   }
   else {
     newFood();
@@ -138,7 +134,7 @@ function drawBurger() {
 // function that draws cherries for an amount of time
 function drawCherries() {
   if (millis() <= timePassed + cherriesTime) {
-    image(cherries,foodX,foodY,[100],[100]);
+    image(cherries,foodX,foodY,100,100);
   }
   else {
     newFood();
@@ -148,7 +144,7 @@ function drawCherries() {
 // function that draws cookie for an amount of time
 function drawCookie() {
   if (millis() <= timePassed + cookieTime) {
-    image(cookie,foodX,foodY,[100],[100]);
+    image(cookie,foodX,foodY,100,100);
   }
   else {
     newFood();
@@ -158,7 +154,7 @@ function drawCookie() {
 // function that draws ice cream for an amount of time
 function drawIceCream() {
   if (millis() <= timePassed + iceCreamTime) {
-    image(iceCream,foodX,foodY,[100],[100]);
+    image(iceCream,foodX,foodY,100,100);
   }
   else {
     newFood();
@@ -168,7 +164,7 @@ function drawIceCream() {
 // function that draws pizza for an amount of time
 function drawPizza() {
   if (millis() <= timePassed + pizzaTime) {
-    image(pizza,foodX,foodY,[100],[100]);
+    image(pizza,foodX,foodY,100,100);
   }
   else {
     newFood();
