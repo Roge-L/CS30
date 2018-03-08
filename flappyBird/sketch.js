@@ -7,6 +7,8 @@
 let canvas;
 let canvasWidth, canvasHeight;
 let birdX, birdY, birdSpeed;
+let map;
+let greenBar1, greenBar2;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
@@ -45,6 +47,5 @@ function replaceBottomGreenBar() {
   // two rectangles of the green bar design
   // when one rectangle leaves the canvas, the other one replaces the first one's
   // place
-
-
+  image(greenBar1,200, 200);
 }
