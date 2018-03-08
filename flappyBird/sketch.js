@@ -8,7 +8,7 @@ let canvas;
 let canvasWidth, canvasHeight;
 let birdX, birdY, birdSpeed;
 let map;
-let greenBar1, greenBar2;
+let greenBar1, greenBar2, xBar1, xBar2, yBar;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
@@ -24,6 +24,9 @@ function setup() {
   canvas = createCanvas(canvasWidth, canvasHeight);
   birdX = 150;
   birdY = 400;
+  xBar1 = 0;
+  xBar2 = 0;
+  yBar = 693;
 }
 
 function positionCanvas() {
@@ -40,12 +43,19 @@ function draw() {
 
 function drawBird() {
   fill("yellow");
-  ellipse(birdX,birdY,20,20);
+  ellipse(birdX, birdY, 60, 40);
 }
 
 function replaceBottomGreenBar() {
   // two rectangles of the green bar design
   // when one rectangle leaves the canvas, the other one replaces the first one's
   // place
-  image(greenBar1,200, 200);
+  for (let i = 0; i < width; i -= 0.5) {
+    image(greenBar1, xBar1, yBar, width);
+    image(greenBar2, xBar2, yBar, width);
+  }
+}
+
+function mousePressed() {
+  print([mouseX, mouseY]);
 }
