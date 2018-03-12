@@ -9,6 +9,7 @@ let canvasWidth, canvasHeight;
 let birdX, birdY, birdSpeed;
 let map;
 let greenBar1, greenBar2, xBar1, xBar2, yBar;
+let xPipe1, xPipe2, yTopPipe1, yTopPipe2, spaceBetween;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
@@ -25,8 +26,13 @@ function setup() {
   birdX = 150;
   birdY = 400;
   xBar1 = 0;
-  xBar2 = 0;
+  xBar2 = width;
   yBar = 693;
+  xPipe1 = 300;
+  xPipe2 = 50;
+  yTopPipe1 = 300;
+  yTopPipe2 = 500;
+  spaceBetween = 200;
 }
 
 function positionCanvas() {
@@ -39,6 +45,8 @@ function draw() {
   image(map, 0, 0);
   drawBird();
   replaceBottomGreenBar();
+  firstPipe();
+  secondPipe();
 }
 
 function drawBird() {
@@ -47,14 +55,48 @@ function drawBird() {
 }
 
 function replaceBottomGreenBar() {
-  // two rectangles of the green bar design
-  // when one rectangle leaves the canvas, the other one replaces the first one's
-  // place
-  for (let i = 0; i < width; i -= 0.5) {
-    image(greenBar1, xBar1, yBar, width);
-    image(greenBar2, xBar2, yBar, width);
+  image(greenBar1, xBar1, yBar, width);
+  image(greenBar2, xBar2, yBar, width);
+
+  if (xBar1 > -width) {
+    xBar1 -= 2.5;
+    print(xBar1);
+  } else {
+    xBar1 = width;
+  }
+
+  if (xBar2 > -width) {
+    xBar2 -= 2.5;
+    print(xBar2);
+  } else {
+    xBar2 = width;
   }
 }
+
+function firstPipe() {
+  if (xPipe1 > 0) {
+    xPipe1 -= 2.5;
+  } else {
+    yTopPipe1 = random(100, yBar - spaceBetween);
+    xPipe1 = width;
+  }
+  line(xPipe1, 0, xPipe1, yTopPipe1);
+  line(xPipe1, yBar, xPipe1, yTopPipe1 + spaceBetween);
+}
+
+function secondPipe() {
+  if (xPipe2 > 0) {
+    xPipe2 -= 2.5;
+  } else {
+    yTopPipe2 = random(100, yBar - spaceBetween);
+    xPipe2 = width;
+  }
+  line(xPipe2, 0, xPipe2, yTopPipe2);
+  line(xPipe2, yBar, xPipe2, yTopPipe2 + spaceBetween);
+}
+
+// two pipes different y locations with same space between them, random y locations, xchange is same logic as green bar, difference of y locations
+// must be the same (absolute value if needed)
 
 function mousePressed() {
   print([mouseX, mouseY]);
