@@ -6,17 +6,23 @@
 
 let canvas;
 let canvasWidth, canvasHeight;
-let birdX, birdY, birdSpeed;
+let gravity;
+let bird;
+let birdX, birdY;
 let map;
 let greenBar1, greenBar2, xBar1, xBar2, yBar;
+let topPipe, bottomPipe;
 let xPipe1, xPipe2, yTopPipe1, yTopPipe2, spaceBetween;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
 function preload() {
+  bird = loadImage("images/bird.png");
   map = loadImage("images/background.jpg");
   greenBar1 = loadImage("images/greenBar1.PNG");
   greenBar2 = loadImage("images/greenBar2.PNG");
+  topPipe = loadImage("images/topPipe.png");
+  bottomPipe = loadImage("images/bottomPipe.png");
 }
 
 function setup() {
@@ -25,11 +31,12 @@ function setup() {
   canvas = createCanvas(canvasWidth, canvasHeight);
   birdX = 150;
   birdY = 400;
+  gravity = 15;
   xBar1 = 0;
   xBar2 = width;
   yBar = 693;
-  xPipe1 = 300;
-  xPipe2 = 50;
+  xPipe1 = width;
+  xPipe2 = width + 300;
   yTopPipe1 = 300;
   yTopPipe2 = 500;
   spaceBetween = 200;
@@ -43,15 +50,22 @@ function draw() {
   background(0);
   positionCanvas();
   image(map, 0, 0);
-  drawBird();
   replaceBottomGreenBar();
   firstPipe();
   secondPipe();
+  drawBird();
+  grav();
 }
 
 function drawBird() {
   fill("yellow");
-  ellipse(birdX, birdY, 60, 40);
+  ellipse(birdX, birdY + gravity, 60, 40);
+}
+
+function grav() {
+  imageMode(CENTER);
+  image(bird, birdX, birdY);
+  birdY += gravity;
 }
 
 function replaceBottomGreenBar() {
@@ -60,39 +74,39 @@ function replaceBottomGreenBar() {
 
   if (xBar1 > -width) {
     xBar1 -= 2.5;
-    print(xBar1);
   } else {
     xBar1 = width;
   }
 
   if (xBar2 > -width) {
     xBar2 -= 2.5;
-    print(xBar2);
   } else {
     xBar2 = width;
   }
 }
 
 function firstPipe() {
-  if (xPipe1 > 0) {
+  if (xPipe1 > -topPipe.width / 2) {
     xPipe1 -= 2.5;
   } else {
     yTopPipe1 = random(100, yBar - spaceBetween);
-    xPipe1 = width;
+    xPipe1 = width + topPipe.width / 2;
   }
-  line(xPipe1, 0, xPipe1, yTopPipe1);
-  line(xPipe1, yBar, xPipe1, yTopPipe1 + spaceBetween);
+  imageMode(CENTER);
+  image(topPipe, xPipe1, 0, 100, yTopPipe1);
+  image(bottomPipe, xPipe1, yTopPipe1 + spaceBetween, 100, yTopPipe1);
 }
 
 function secondPipe() {
-  if (xPipe2 > 0) {
+  if (xPipe2 > -topPipe.width / 2) {
     xPipe2 -= 2.5;
   } else {
     yTopPipe2 = random(100, yBar - spaceBetween);
-    xPipe2 = width;
+    xPipe2 = width + topPipe.width / 2;
   }
-  line(xPipe2, 0, xPipe2, yTopPipe2);
-  line(xPipe2, yBar, xPipe2, yTopPipe2 + spaceBetween);
+  imageMode(CENTER);
+  image(topPipe, xPipe2, 0, 100, yTopPipe2);
+  image(bottomPipe, xPipe2, yTopPipe2 + spaceBetween, 100, yTopPipe2);
 }
 
 // two pipes different y locations with same space between them, random y locations, xchange is same logic as green bar, difference of y locations
