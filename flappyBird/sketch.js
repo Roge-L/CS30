@@ -6,13 +6,14 @@
 
 let canvas;
 let canvasWidth, canvasHeight;
-let gravity;
+let gravity, birdVelocity, birdAcceleration;
 let bird;
 let birdX, birdY;
 let map;
 let greenBar1, greenBar2, xBar1, xBar2, yBar;
 let topPipe, bottomPipe;
 let xPipe1, xPipe2, yTopPipe1, yTopPipe2, spaceBetween;
+let timeNow, timePassed;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
@@ -30,8 +31,10 @@ function setup() {
   canvasHeight = windowHeight;
   canvas = createCanvas(canvasWidth, canvasHeight);
   birdX = 150;
-  birdY = 400;
-  gravity = 15;
+  birdY = 0.5;
+  gravity = 0;
+  birdVelocity = 5;
+  birdAcceleration = 0;
   xBar1 = 0;
   xBar2 = width;
   yBar = 693;
@@ -40,6 +43,7 @@ function setup() {
   yTopPipe1 = 300;
   yTopPipe2 = 500;
   spaceBetween = 200;
+  timePassed = millis();
 }
 
 function positionCanvas() {
@@ -55,6 +59,7 @@ function draw() {
   secondPipe();
   drawBird();
   grav();
+  timeNow = millis();
 }
 
 function drawBird() {
@@ -64,9 +69,12 @@ function drawBird() {
 
 function grav() {
   imageMode(CENTER);
-  image(bird, birdX, birdY);
+  print(timeNow/1000);
+  image(bird, birdX, birdY, 90.48, 90.24);
   birdY += gravity;
 }
+
+// gravity increases with time, when bird jumps gravity resets
 
 function replaceBottomGreenBar() {
   image(greenBar1, xBar1, yBar, width);
@@ -107,11 +115,4 @@ function secondPipe() {
   imageMode(CENTER);
   image(topPipe, xPipe2, 0, 100, yTopPipe2);
   image(bottomPipe, xPipe2, yTopPipe2 + spaceBetween, 100, yTopPipe2);
-}
-
-// two pipes different y locations with same space between them, random y locations, xchange is same logic as green bar, difference of y locations
-// must be the same (absolute value if needed)
-
-function mousePressed() {
-  print([mouseX, mouseY]);
 }
