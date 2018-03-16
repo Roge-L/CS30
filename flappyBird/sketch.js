@@ -13,7 +13,6 @@ let map;
 let greenBar1, greenBar2, xBar1, xBar2, yBar;
 let topPipe, bottomPipe;
 let xPipe1, xPipe2, yTopPipe1, yTopPipe2, spaceBetween;
-let timeNow, timePassed;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
@@ -31,9 +30,9 @@ function setup() {
   canvasHeight = windowHeight;
   canvas = createCanvas(canvasWidth, canvasHeight);
   birdX = 150;
-  birdY = 0.5;
-  gravity = 0;
-  birdVelocity = 5;
+  birdY = 0;
+  gravity = 0.5;
+  birdVelocity = 0;
   birdAcceleration = 0;
   xBar1 = 0;
   xBar2 = width;
@@ -43,7 +42,6 @@ function setup() {
   yTopPipe1 = 300;
   yTopPipe2 = 500;
   spaceBetween = 200;
-  timePassed = millis();
 }
 
 function positionCanvas() {
@@ -57,21 +55,22 @@ function draw() {
   replaceBottomGreenBar();
   firstPipe();
   secondPipe();
-  drawBird();
   grav();
-  timeNow = millis();
-}
-
-function drawBird() {
-  fill("yellow");
-  ellipse(birdX, birdY + gravity, 60, 40);
+  image(bird, birdX, birdY, 90.48, 90.24);
 }
 
 function grav() {
   imageMode(CENTER);
-  print(timeNow/1000);
-  image(bird, birdX, birdY, 90.48, 90.24);
-  birdY += gravity;
+  birdVelocity += birdAcceleration;
+  birdVelocity += gravity;
+  birdY += birdVelocity;
+  birdAcceleration = 0;
+}
+
+// the bird distance jumped must be 20, no more or less regardless of gravity
+
+function keyPressed() {
+  birdAcceleration = -20;
 }
 
 // gravity increases with time, when bird jumps gravity resets
