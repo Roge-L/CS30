@@ -46,7 +46,7 @@ function setup() {
   yTopPipe1 = 300;
   yTopPipe2 = 500;
   spaceBetween = windowHeight / 2.1;
-  state = 1;
+  state = 2;
 }
 
 // centering the canvas
@@ -69,7 +69,6 @@ function grav() {
   birdVelocity += gravity;
   birdY += birdVelocity;
   birdAcceleration = 0;
-  // if (birdY <= )
 }
 
 // jump when key pressed
@@ -131,8 +130,8 @@ function collision() {
   // PLEASE ADD GREEN PIPE COLLISIONS
 }
 
-function startGame() {
-  if (mouseClicked && mouseX > canvasWidth / 2 && mouseX < playButton.width * 0.5) {
+function mouseClicked() {
+  if (mouseX > canvasWidth / 2 && mouseX < playButton.width * 0.5 && mouseY > canvasHeight / 1.6 && mouseY < playButton.height) {
     state = 2;
   }
 }
