@@ -46,7 +46,7 @@ function setup() {
   yTopPipe1 = 300;
   yTopPipe2 = 500;
   spaceBetween = windowHeight / 2.1;
-  state = 2;
+  state = 1;
 }
 
 // centering the canvas
@@ -60,6 +60,7 @@ function draw() {
   positionCanvas();
   image(map, 0, 0);
   statesFunction();
+  mouseClicked();
 }
 
 // physics
@@ -131,7 +132,8 @@ function collision() {
 }
 
 function mouseClicked() {
-  if (mouseX > canvasWidth / 2 && mouseX < playButton.width * 0.5 && mouseY > canvasHeight / 1.6 && mouseY < playButton.height) {
+  if (mouseX > ((canvasWidth / 2) - (playButton.width * 0.5) * 0.5) && mouseX < ((canvasWidth / 2) + (playButton.width * 0.5) * 0.5) && mouseY > ((canvasHeight / 1.6) - (playButton.height * 0.5) * 0.5)
+  && mouseY < ((canvasHeight / 1.6) + (playButton.height * 0.5) * 0.5)) {
     state = 2;
   }
 }
