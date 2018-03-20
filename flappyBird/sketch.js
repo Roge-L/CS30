@@ -14,6 +14,8 @@ let topPipe, bottomPipe;
 let xPipe1, xPipe2, yTopPipe1, yTopPipe2, spaceBetween;
 let state;
 let title, playButton, gameOver;
+let point;
+let flapFont;
 
 // preloading images and sounds
 function preload() {
@@ -26,6 +28,7 @@ function preload() {
   title = loadImage("images/title.png");
   playButton = loadImage("images/playButton.png");
   gameOver = loadImage("images/gameOver.png");
+  flapFont = loadFont("font/04B_19__.TTF");
 }
 
 // assigning values to variables
@@ -35,7 +38,7 @@ function setup() {
   canvas = createCanvas(canvasWidth, canvasHeight);
   birdX = canvasWidth / 2;
   birdY = canvasHeight / 2.3;
-  gravity = 0.5;
+  gravity = 0.6;
   birdVelocity = 0;
   birdAcceleration = 0;
   xBar1 = 0;
@@ -43,10 +46,11 @@ function setup() {
   yBar = 693;
   xPipe1 = width;
   xPipe2 = width + 300;
-  yTopPipe1 = 300;
-  yTopPipe2 = 500;
   spaceBetween = windowHeight / 2.1;
+  yTopPipe1 = random(0, yBar - spaceBetween);
+  yTopPipe2 = random(0, yBar - spaceBetween);
   state = 1;
+  point = 0;
 }
 
 // centering the canvas
@@ -60,16 +64,15 @@ function draw() {
   positionCanvas();
   image(map, 0, 0);
   statesFunction();
-  mouseClicked();
 }
 
 // physics
 function grav() {
-  imageMode(CENTER);
   birdVelocity += birdAcceleration;
   birdVelocity += gravity;
   birdY += birdVelocity;
   birdAcceleration = 0;
+  // FIX ME, I WANT PHYSICS LIKE THE ORIGINAL GAME
 }
 
 // jump when key pressed
@@ -131,13 +134,28 @@ function collision() {
   // PLEASE ADD GREEN PIPE COLLISIONS
 }
 
+// point system
+function score() {
+  if (xPipe1 > birdX - 1.5 && xPipe1 < birdX + 1.5 || xPipe2 > birdX - 1.5 && xPipe2 < birdX + 1.5) {
+    point += 1;
+  }
+  textSize(54);
+  textFont(flapFont);
+  stroke("black");
+  strokeWeight(4);
+  fill("white");
+  text(point, birdX, canvasHeight / 8);
+}
+
+// play button
 function mouseClicked() {
-  if (mouseX > ((canvasWidth / 2) - (playButton.width * 0.5) * 0.5) && mouseX < ((canvasWidth / 2) + (playButton.width * 0.5) * 0.5) && mouseY > ((canvasHeight / 1.6) - (playButton.height * 0.5) * 0.5)
-  && mouseY < ((canvasHeight / 1.6) + (playButton.height * 0.5) * 0.5)) {
+  if (mouseX > ((canvasWidth / 2) - (playButton.width * 0.5) * 0.5) && mouseX < ((canvasWidth / 2) + (playButton.width * 0.5) * 0.5) && mouseY > ((canvasHeight / 1.6) - (playButton.height * 0.5) * 0.5) &&
+    mouseY < ((canvasHeight / 1.6) + (playButton.height * 0.5) * 0.5) && state === 1) {
     state = 2;
   }
 }
 
+// function which reacts to states, states are essential for any game to work
 function statesFunction() {
   if (state === 1) {
     imageMode(CENTER);
@@ -148,8 +166,9 @@ function statesFunction() {
     replaceBottomGreenBar();
     firstPipe();
     secondPipe();
+    score();
     grav();
-    image(bird, birdX, birdY, 90.48, 90.24);
+    image(bird, birdX, birdY, bird.width * 0.2, bird.height * 0.2);
     collision();
   } else {
     image(topPipe, xPipe1, yTopPipe1);
@@ -160,3 +179,9 @@ function statesFunction() {
     image(gameOver, canvasWidth / 2, canvasHeight / 4.25);
   }
 }
+
+// TO DO:
+// Sounds
+// HTML
+// Physics
+// Green Pipes
