@@ -16,6 +16,7 @@ let state;
 let title, playButton, gameOver;
 let point;
 let flapFont;
+let flap, pointSound, hitSound, dieSound;
 
 // preloading images and sounds
 function preload() {
@@ -29,6 +30,10 @@ function preload() {
   playButton = loadImage("images/playButton.png");
   gameOver = loadImage("images/gameOver.png");
   flapFont = loadFont("font/04B_19__.TTF");
+  flap = loadSound("sounds/Everything/sfx_wing.wav");
+  pointSound = loadSound("sounds/Everything/sfx_point.wav");
+  hitSound = loadSound("sounds/Everything/sfx_hit.wav");
+  dieSound = loadSound("sounds/Everything/sfx_die.wav");
 }
 
 // assigning values to variables
@@ -46,7 +51,7 @@ function setup() {
   yBar = 693;
   xPipe1 = width;
   xPipe2 = width + 300;
-  spaceBetween = windowHeight / 2.1;
+  spaceBetween = windowHeight / 4;
   yTopPipe1 = random(0, yBar - spaceBetween);
   yTopPipe2 = random(0, yBar - spaceBetween);
   state = 1;
@@ -77,7 +82,11 @@ function grav() {
 
 // jump when key pressed
 function keyPressed() {
-  birdAcceleration = -20;
+  if (state === 2) {
+    birdAcceleration = -20;
+    flap.setVolume(0.3);
+    flap.play();
+  }
 }
 
 // moves the green bar at the bottom
@@ -107,9 +116,8 @@ function firstPipe() {
     yTopPipe1 = random(0, yBar - spaceBetween);
     xPipe1 = width + topPipe.width / 2;
   }
-  imageMode(CENTER);
-  image(topPipe, xPipe1, yTopPipe1);
-  image(bottomPipe, xPipe1, yTopPipe1 + spaceBetween);
+  image(topPipe, xPipe1, 0, topPipe.width, yTopPipe1);
+  image(bottomPipe, xPipe1, yTopPipe1 + spaceBetween, bottomPipe.width, (canvasHeight - (yTopPipe1 + spaceBetween + (abs(canvasHeight - yBar)))));
 }
 
 // moving the second pair of pipes
@@ -121,15 +129,25 @@ function secondPipe() {
     yTopPipe2 = random(0, yBar - spaceBetween);
     xPipe2 = width + topPipe.width / 2;
   }
-  imageMode(CENTER);
-  image(topPipe, xPipe2, yTopPipe2);
-  image(bottomPipe, xPipe2, yTopPipe2 + spaceBetween);
+  image(topPipe, xPipe2, 0, topPipe.width, yTopPipe2);
+  image(bottomPipe, xPipe2, yTopPipe2 + spaceBetween, bottomPipe.width, (canvasHeight - (yTopPipe2 + spaceBetween + (abs(canvasHeight - yBar)))));
 }
 
 // collision detection for the bird
 function collision() {
-  if (birdY >= yBar || birdY <= 0) {
+  if (birdY >= yBar) {
+    hitSound.setVolume(0.4);
+    hitSound.play();
+    dieSound.setVolume(0.4);
+    dieSound.play(0.2);
     state = 3;
+  }
+  if (birdY <= 0) {
+    hitSound.setVolume(0.4);
+    hitSound.play();
+    dieSound.setVolume(0.4);
+    dieSound.play(0.2);
+    state = 4;
   }
   // PLEASE ADD GREEN PIPE COLLISIONS
 }
@@ -138,13 +156,21 @@ function collision() {
 function score() {
   if (xPipe1 > birdX - 1.5 && xPipe1 < birdX + 1.5 || xPipe2 > birdX - 1.5 && xPipe2 < birdX + 1.5) {
     point += 1;
+    pointSound.setVolume(0.5);
+    pointSound.play();
   }
   textSize(54);
   textFont(flapFont);
   stroke("black");
   strokeWeight(4);
   fill("white");
-  text(point, birdX, canvasHeight / 8);
+  if (state === 2) {
+    text(point, birdX, canvasHeight / 8);
+  }
+  else if (state === 3 || state === 4) {
+    textSize(64);
+    text(point, birdX, canvasHeight / 2);
+  }
 }
 
 // play button
@@ -155,12 +181,19 @@ function mouseClicked() {
   }
 }
 
+function displayPipesAtTheEnd() {
+  image(topPipe, xPipe1, 0, topPipe.width, yTopPipe1);
+  image(bottomPipe, xPipe1, yTopPipe1 + spaceBetween, bottomPipe.width, (canvasHeight - (yTopPipe1 + spaceBetween + (abs(canvasHeight - yBar)))));
+}
+
 // function which reacts to states, states are essential for any game to work
 function statesFunction() {
   if (state === 1) {
     imageMode(CENTER);
     image(playButton, canvasWidth / 2, canvasHeight / 1.6, playButton.width * 0.5, playButton.height * 0.5);
     image(title, canvasWidth / 2, canvasHeight / 4.25, title.width * 0.124, title.height * 0.124);
+
+    imageMode(CENTER);
     image(bird, birdX, birdY, bird.width * 0.2, bird.height * 0.2);
   } else if (state === 2) {
     replaceBottomGreenBar();
@@ -168,20 +201,26 @@ function statesFunction() {
     secondPipe();
     score();
     grav();
+    imageMode(CENTER);
     image(bird, birdX, birdY, bird.width * 0.2, bird.height * 0.2);
     collision();
-  } else {
-    image(topPipe, xPipe1, yTopPipe1);
-    image(bottomPipe, xPipe1, yTopPipe1 + spaceBetween);
-    image(topPipe, xPipe2, yTopPipe2);
-    image(bottomPipe, xPipe2, yTopPipe2 + spaceBetween);
+  } else if (state === 3) {
+    displayPipesAtTheEnd();
+    score();
     imageMode(CENTER);
+    image(gameOver, canvasWidth / 2, canvasHeight / 4.25);
+  }
+  else {
+    grav();
+    displayPipesAtTheEnd();
+    score();
+    imageMode(CENTER);
+    image(bird, birdX, birdY, bird.width * 0.2, bird.height * 0.2);
     image(gameOver, canvasWidth / 2, canvasHeight / 4.25);
   }
 }
 
 // TO DO:
-// Sounds
 // HTML
+// Collision Detection
 // Physics
-// Green Pipes
