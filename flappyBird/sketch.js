@@ -63,7 +63,7 @@ function positionCanvas() {
   canvas.position(windowWidth / 2 - canvasWidth / 2, windowHeight / 2 - canvasHeight / 2);
 }
 
-// executes 60 times per second
+// executes 60 times per second, the so called frames per second
 function draw() {
   background(0);
   positionCanvas();
@@ -77,15 +77,40 @@ function grav() {
   birdVelocity += gravity;
   birdY += birdVelocity;
   birdAcceleration = 0;
-  // FIX ME, I WANT PHYSICS LIKE THE ORIGINAL GAME
 }
 
-// jump when key pressed
+// function to reset the variables (used when restarting the game)
+function resetVariables() {
+  birdX = canvasWidth / 2;
+  birdY = canvasHeight / 2.3;
+  gravity = 0.6;
+  birdVelocity = 0;
+  birdAcceleration = 0;
+  xBar1 = 0;
+  xBar2 = width;
+  yBar = 693;
+  xPipe1 = width;
+  xPipe2 = width + 300;
+  spaceBetween = windowHeight / 4;
+  yTopPipe1 = random(0, yBar - spaceBetween);
+  yTopPipe2 = random(0, yBar - spaceBetween);
+  point = 0;
+}
+
+// jump when spacebar pressed and restart game when R key pressed
 function keyPressed() {
-  if (state === 2) {
-    birdAcceleration = -20;
+  // jump!
+  if (state === 2 && key === " ") {
+    birdVelocity = 0;
+    birdAcceleration = -11;
     flap.setVolume(0.3);
     flap.play();
+  }
+
+  // restart game
+  if ((state === 3 || state === 4) && (key === "r" || key === "R")) {
+    resetVariables();
+    state = 2;
   }
 }
 
@@ -133,30 +158,47 @@ function secondPipe() {
   image(bottomPipe, xPipe2, yTopPipe2 + spaceBetween, bottomPipe.width, (canvasHeight - (yTopPipe2 + spaceBetween + (abs(canvasHeight - yBar)))));
 }
 
+// sounds for dying
+function death() {
+  hitSound.setVolume(0.4);
+  hitSound.play();
+  dieSound.setVolume(0.4);
+  dieSound.play(0.2);
+}
+
 // collision detection for the bird
 function collision() {
   if (birdY >= yBar) {
-    hitSound.setVolume(0.4);
-    hitSound.play();
-    dieSound.setVolume(0.4);
-    dieSound.play(0.2);
+    death();
     state = 3;
   }
   if (birdY <= 0) {
-    hitSound.setVolume(0.4);
-    hitSound.play();
-    dieSound.setVolume(0.4);
-    dieSound.play(0.2);
+    death();
     state = 4;
   }
-  // PLEASE ADD GREEN PIPE COLLISIONS
+  if (birdY - (bird.height * 0.16) / 2 <= yTopPipe1 && birdX + (bird.width * 0.16) / 2 >= xPipe1 && birdX + (bird.width * 0.16) / 2 <= xPipe1 + topPipe.width) {
+    death();
+    state = 4;
+  }
+  if (birdY + (bird.height * 0.16) / 2 >= yTopPipe1 + spaceBetween && birdX + (bird.width * 0.16) / 2 >= xPipe1 && birdX + (bird.width * 0.16) / 2 <= xPipe1 + bottomPipe.width) {
+    death();
+    state = 4;
+  }
+  if (birdY - (bird.height * 0.16) / 2 <= yTopPipe2 && birdX + (bird.width * 0.16) / 2 >= xPipe2 && birdX + (bird.width * 0.16) / 2 <= xPipe2 + topPipe.width) {
+    death();
+    state = 4;
+  }
+  if (birdY + (bird.height * 0.16) / 2 >= yTopPipe2 + spaceBetween && birdX + (bird.width * 0.16) / 2 >= xPipe2 && birdX + (bird.width * 0.16) / 2 <= xPipe2 + bottomPipe.width) {
+    death();
+    state = 4;
+  }
 }
 
 // point system
 function score() {
   if (xPipe1 > birdX - 1.5 && xPipe1 < birdX + 1.5 || xPipe2 > birdX - 1.5 && xPipe2 < birdX + 1.5) {
     point += 1;
-    pointSound.setVolume(0.5);
+    pointSound.setVolume(0.4);
     pointSound.play();
   }
   textSize(54);
@@ -181,9 +223,22 @@ function mouseClicked() {
   }
 }
 
+// message telling player how to play again
+function endMessage() {
+  textSize(32);
+  textFont(flapFont);
+  stroke("black");
+  strokeWeight(4);
+  fill("white");
+  text("R to restart", canvasWidth * 0.34, canvasHeight * 0.65);
+}
+
+// function that keeps pipes on the screen after losing
 function displayPipesAtTheEnd() {
   image(topPipe, xPipe1, 0, topPipe.width, yTopPipe1);
   image(bottomPipe, xPipe1, yTopPipe1 + spaceBetween, bottomPipe.width, (canvasHeight - (yTopPipe1 + spaceBetween + (abs(canvasHeight - yBar)))));
+  image(topPipe, xPipe2, 0, topPipe.width, yTopPipe2);
+  image(bottomPipe, xPipe2, yTopPipe2 + spaceBetween, bottomPipe.width, (canvasHeight - (yTopPipe2 + spaceBetween + (abs(canvasHeight - yBar)))));
 }
 
 // function which reacts to states, states are essential for any game to work
@@ -192,7 +247,6 @@ function statesFunction() {
     imageMode(CENTER);
     image(playButton, canvasWidth / 2, canvasHeight / 1.6, playButton.width * 0.5, playButton.height * 0.5);
     image(title, canvasWidth / 2, canvasHeight / 4.25, title.width * 0.124, title.height * 0.124);
-
     imageMode(CENTER);
     image(bird, birdX, birdY, bird.width * 0.2, bird.height * 0.2);
   } else if (state === 2) {
@@ -209,6 +263,7 @@ function statesFunction() {
     score();
     imageMode(CENTER);
     image(gameOver, canvasWidth / 2, canvasHeight / 4.25);
+    endMessage();
   }
   else {
     grav();
@@ -217,10 +272,6 @@ function statesFunction() {
     imageMode(CENTER);
     image(bird, birdX, birdY, bird.width * 0.2, bird.height * 0.2);
     image(gameOver, canvasWidth / 2, canvasHeight / 4.25);
+    endMessage();
   }
 }
-
-// TO DO:
-// HTML
-// Collision Detection
-// Physics
