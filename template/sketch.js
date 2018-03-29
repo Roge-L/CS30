@@ -1,6 +1,6 @@
 // Title
 // Roger Lam
-// March 5, 2018
+// April 1, 2018
 
 // global variables
 
@@ -8,6 +8,7 @@
 // executed before the rest of the program runs -- helpful for things
 // like loading images
 function preload() {
+
 }
 
 // the setup function will only run once (before the draw loop begins)
@@ -16,7 +17,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 }
 
-//
+// a loop that repeats given actions according to your fps
 function draw() {
   background(255);
 }
