@@ -1,6 +1,6 @@
-// Title
+// Archeology Game
 // Roger Lam
-// March 5, 2018
+// April 1, 2018
 
 // global variables
 
@@ -10,12 +10,16 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 }
 
-//
+// a loop that executes given actions according to your fps
 function draw() {
   background(255);
-  print(double23([3, 3]));
 }
 
-function double23(nums) {
-  return (nums === [2, 2] || nums === [3, 3]);
-}
+// you are broke.
+// one day you go into your backyard and something is sticking out of the ground...
+// turns out there are all sorts of things in your backyard, including ancient artifacts and other valuable items
+
+// NEEDS:
+// 2d grid with layers within
+// randomly generated items in beneath the grid
+//
