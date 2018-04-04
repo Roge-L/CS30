@@ -20,6 +20,5 @@ function draw() {
 // turns out there are all sorts of things in your backyard, including ancient artifacts and other valuable items
 
 // NEEDS:
-// 2d grid with layers within
-// randomly generated items in beneath the grid
+// 2d grid
 //
