@@ -1,6 +1,6 @@
 // Archeology Game
 // Roger Lam
-// April 1, 2018
+// April 6, 2018
 
 // global variables
 
@@ -21,4 +21,12 @@ function draw() {
 
 // NEEDS:
 // 2d grid
-//
+// timer for each square, starts counting down when player uncovers it
+// reward system/inventory system
+
+// WANTS:
+// title screen
+// progress save
+// nice ass graphics
+// game over
+// music/sounds
