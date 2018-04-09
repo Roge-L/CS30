@@ -7,9 +7,15 @@
 let grid;
 let cols, rows;
 let cellSize;
+let bitcoin, portalGun;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
+function preload() {
+  bitcoin = loadImage("assets/images/bitcoin.png");
+  portalGun = loadImage("assets/images/portalGun.png");
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   cols = 10;
@@ -31,8 +37,9 @@ function gridCreation(cols, rows) {
     for (let y = 0; y < rows; y++) {
       if (random(100) < 1) {
         randomGrid[x].push("bitcoin");
-      }
-      else {
+      } else if (random(100) === 50) {
+        randomGrid[x].push("portalGun");
+      } else {
         randomGrid[x].push(0);
       }
     }
@@ -49,11 +56,17 @@ function displayGrid() {
     for (let y = 0; y < rows; y++) {
       if (grid[x][y] === 0) {
         fill(85, 64, 16);
+        rect(x * cellSize, y * cellSize, cellSize, cellSize);
+      } else if (grid[x][y] === "bitcoin") {
+        fill(85, 64, 16);
+        rect(x * cellSize, y * cellSize, cellSize, cellSize);
+        // fill(228, 187, 64);
+        image(bitcoin, x * cellSize, y * cellSize, 60, 60);
+      } else if (grid[x][y] === "portalGun") {
+        fill(85, 64, 16);
+        rect(x * cellSize, y * cellSize, cellSize, cellSize);
+        image(portalGun, x * cellSize, y * cellSize, 120, 60);
       }
-      else {
-        fill(228, 187, 64);
-      }
-      rect(x * cellSize, y * cellSize, cellSize, cellSize);
     }
   }
 }
