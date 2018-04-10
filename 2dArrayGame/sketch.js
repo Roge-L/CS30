@@ -7,13 +7,14 @@
 let grid;
 let cols, rows;
 let cellSize;
-let bitcoin, portalGun;
+let bitcoin, portalGun, poop;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
 function preload() {
   bitcoin = loadImage("assets/images/bitcoin.png");
   portalGun = loadImage("assets/images/portalGun.png");
+  poop = loadImage("assets/images/poop.png");
 }
 
 function setup() {
@@ -35,10 +36,13 @@ function gridCreation(cols, rows) {
   for (let x = 0; x < cols; x++) {
     randomGrid.push([]);
     for (let y = 0; y < rows; y++) {
-      if (random(100) < 1) {
+      if (random(20) < 1) {
         randomGrid[x].push("bitcoin");
-      } else if (random(100) === 50) {
+      } else if (random(20) < 1) {
         randomGrid[x].push("portalGun");
+      }
+      else if (random(20) < 1) {
+        randomGrid[x].push("poop");
       } else {
         randomGrid[x].push(0);
       }
@@ -47,25 +51,28 @@ function gridCreation(cols, rows) {
   return randomGrid;
 }
 
-function spawnItems() {
-  print("not yet");
-}
 
 function displayGrid() {
+  fill(85, 64, 16);
   for (let x = 0; x < cols; x++) {
     for (let y = 0; y < rows; y++) {
       if (grid[x][y] === 0) {
-        fill(85, 64, 16);
         rect(x * cellSize, y * cellSize, cellSize, cellSize);
       } else if (grid[x][y] === "bitcoin") {
-        fill(85, 64, 16);
         rect(x * cellSize, y * cellSize, cellSize, cellSize);
-        // fill(228, 187, 64);
-        image(bitcoin, x * cellSize, y * cellSize, 60, 60);
-      } else if (grid[x][y] === "portalGun") {
-        fill(85, 64, 16);
+        image(bitcoin, x * cellSize, y * cellSize, cellSize, cellSize);
+      } else if (grid[x][y] === "portalGun" && ((x * cellSize) - cellSize) > -1 && ((x * cellSize) - cellSize) != "bitcoin" && ((x * cellSize) - cellSize) != "poop") {
         rect(x * cellSize, y * cellSize, cellSize, cellSize);
-        image(portalGun, x * cellSize, y * cellSize, 120, 60);
+        image(portalGun, (x * cellSize) - cellSize, y * cellSize, cellSize * 2, cellSize);
+        // if (((x * cellSize) - cellSize) < 0 || ((x * cellSize) - cellSize) === "bitcoin" || ((x * cellSize) - cellSize) === "poop") {
+        //   continue;
+        // } else {
+        //   image(portalGun, (x * cellSize) - cellSize, y * cellSize, cellSize * 2, cellSize);
+        // }
+      }
+      else if (grid[x][y] === "poop") {
+        rect(x * cellSize, y * cellSize, cellSize, cellSize);
+        image(poop, x * cellSize, y * cellSize, cellSize, cellSize);
       }
     }
   }
