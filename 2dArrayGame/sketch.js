@@ -40,8 +40,7 @@ function gridCreation(cols, rows) {
         randomGrid[x].push("bitcoin");
       } else if (random(20) < 1) {
         randomGrid[x].push("portalGun");
-      }
-      else if (random(20) < 1) {
+      } else if (random(20) < 1) {
         randomGrid[x].push("poop");
       } else {
         randomGrid[x].push(0);
@@ -61,16 +60,14 @@ function displayGrid() {
       } else if (grid[x][y] === "bitcoin") {
         rect(x * cellSize, y * cellSize, cellSize, cellSize);
         image(bitcoin, x * cellSize, y * cellSize, cellSize, cellSize);
-      } else if (grid[x][y] === "portalGun" && ((x * cellSize) - cellSize) > -1 && ((x * cellSize) - cellSize) != "bitcoin" && ((x * cellSize) - cellSize) != "poop") {
+      } else if (grid[x][y] === "portalGun") {
         rect(x * cellSize, y * cellSize, cellSize, cellSize);
-        image(portalGun, (x * cellSize) - cellSize, y * cellSize, cellSize * 2, cellSize);
-        // if (((x * cellSize) - cellSize) < 0 || ((x * cellSize) - cellSize) === "bitcoin" || ((x * cellSize) - cellSize) === "poop") {
-        //   continue;
-        // } else {
-        //   image(portalGun, (x * cellSize) - cellSize, y * cellSize, cellSize * 2, cellSize);
-        // }
-      }
-      else if (grid[x][y] === "poop") {
+        if (x * cellSize - cellSize >= 0) {
+          if (grid[x - 1][y] >= 0 && grid[x-1][y] != "bitcoin" && grid[x-1][y] != "poop" && grid[x-1][y] != "portalGun") {
+            image(portalGun, x * cellSize - cellSize, y * cellSize, cellSize * 2, cellSize);
+          }
+        }
+      } else if (grid[x][y] === "poop") {
         rect(x * cellSize, y * cellSize, cellSize, cellSize);
         image(poop, x * cellSize, y * cellSize, cellSize, cellSize);
       }
