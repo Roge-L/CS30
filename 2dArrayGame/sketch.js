@@ -8,6 +8,7 @@ let artifactsGrid;
 let cols, rows;
 let cellSize;
 let bitcoin, portalGun, poop, tRex;
+let artifactX, artifactY;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
@@ -24,6 +25,8 @@ function setup() {
   rows = 10;
   artifactsGrid = artifactsGridCreation(cols, rows);
   cellSize = 60;
+  artifactX = 0;
+  artifactY = 0;
 }
 
 // a loop that executes given actions according to your fps
@@ -37,14 +40,12 @@ function artifactsGridCreation(cols, rows) {
   for (let x = 0; x < cols; x++) {
     randomGrid.push([]);
     for (let y = 0; y < rows; y++) {
-      if (random(1500) < 1) {
+      if (random(5) < 1) {
         randomGrid[x].push("bitcoin");
-      } else if (random(1500) < 1) {
+      } else if (random(5) < 1) {
         randomGrid[x].push("portalGun");
-      } else if (random(1000) < 1) {
+      } else if (random(5) < 1) {
         randomGrid[x].push("poop");
-      } else if (random(10) < 1) {
-        randomGrid[x].push("tRex");
       } else {
         randomGrid[x].push(0);
       }
@@ -56,7 +57,7 @@ function artifactsGridCreation(cols, rows) {
 function checkDinoSurroundings() {
   for (let i = 1; i < 4; i++) {
     for (let j = 1; i < 4; j++) {
-      if (artifactsGrid[x - i][y - j] != "bitcoin" && artifactsGrid[x - i][y - j] != "poop" && artifactsGrid[x - i][y - j] != "portalGun") {
+      if (artifactsGrid[artifactX - i][artifactY - j] != "bitcoin" && artifactsGrid[artifactX - i][artifactY - j] != "poop" && artifactsGrid[artifactX - i][artifactY - j] != "portalGun") {
         return true;
       }
       else {
@@ -68,29 +69,26 @@ function checkDinoSurroundings() {
 
 function displayArtifactsGrid() {
   fill(40, 22, 11);
-  for (let x = 0; x < cols; x++) {
-    for (let y = 0; y < rows; y++) {
-      if (artifactsGrid[x][y] === 0) {
+  for (artifactX = 0; artifactX < cols; artifactX++) {
+    for (artifactY = 0; artifactY < rows; artifactY++) {
+      if (artifactsGrid[artifactX][artifactY] === 0) {
         // rect(x * cellSize, y * cellSize, cellSize, cellSize);
-      } else if (artifactsGrid[x][y] === "bitcoin") {
+      } else if (artifactsGrid[artifactX][artifactY] === "bitcoin") {
         // rect(x * cellSize, y * cellSize, cellSize, cellSize);
-        image(bitcoin, x * cellSize, y * cellSize, cellSize, cellSize);
-      } else if (artifactsGrid[x][y] === "portalGun") {
+        image(bitcoin, artifactX * cellSize, artifactY * cellSize, cellSize, cellSize);
+      } else if (artifactsGrid[artifactX][artifactY] === "portalGun") {
         // rect(x * cellSize, y * cellSize, cellSize, cellSize);
-        if (x * cellSize - cellSize >= 0) {
-          if (artifactsGrid[x - 1][y] >= 0 && artifactsGrid[x - 1][y] != "bitcoin" && artifactsGrid[x - 1][y] != "poop" && artifactsGrid[x - 1][y] != "portalGun") {
-            image(portalGun, x * cellSize - cellSize, y * cellSize, cellSize * 2, cellSize);
+        if (artifactX * cellSize - cellSize >= 0) {
+          if (artifactsGrid[artifactX - 1][artifactY] >= 0 && artifactsGrid[artifactX - 1][artifactY] != "bitcoin" && artifactsGrid[artifactX - 1][artifactY] != "poop" && artifactsGrid[artifactX - 1][artifactY] != "portalGun") {
+            image(portalGun, artifactX * cellSize - cellSize, artifactY * cellSize, cellSize * 2, cellSize);
+          }
+          else {
+            artifactsGrid.splice(artifactX, 1, 0);
           }
         }
-      } else if (artifactsGrid[x][y] === "poop") {
+      } else if (artifactsGrid[artifactX][artifactY] === "poop") {
         // rect(x * cellSize, y * cellSize, cellSize, cellSize);
-        image(poop, x * cellSize, y * cellSize, cellSize, cellSize);
-      }
-      else {
-        // rect(x * cellSize, y * cellSize, cellSize, cellSize);
-        if (x * cellSize - 5 * cellSize >= 0 && y * cellSize - 5 * cellSize >= 0) {
-          image(tRex, x * cellSize - 5 * cellSize, y * cellSize - 5 * cellSize, 5 * cellSize, 5 * cellSize);
-        }
+        image(poop, artifactX * cellSize, artifactY * cellSize, cellSize, cellSize);
       }
     }
   }
