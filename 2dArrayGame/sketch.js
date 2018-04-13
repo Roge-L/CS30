@@ -4,7 +4,7 @@
 
 // global variables
 
-let grid;
+let artifactsGrid;
 let cols, rows;
 let cellSize;
 let bitcoin, portalGun, poop, tRex;
@@ -22,7 +22,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   cols = 10;
   rows = 10;
-  grid = gridCreation(cols, rows);
+  artifactsGrid = artifactsGridCreation(cols, rows);
   cellSize = 60;
 }
 
@@ -32,7 +32,7 @@ function draw() {
   displayArtifactsGrid();
 }
 
-function gridCreation(cols, rows) {
+function artifactsGridCreation(cols, rows) {
   let randomGrid = [];
   for (let x = 0; x < cols; x++) {
     randomGrid.push([]);
@@ -56,7 +56,7 @@ function gridCreation(cols, rows) {
 function checkDinoSurroundings() {
   for (let i = 1; i < 4; i++) {
     for (let j = 1; i < 4; j++) {
-      if (grid[x - i][y - j] != "bitcoin" && grid[x - i][y - j] != "poop" && grid[x - i][y - j] != "portalGun") {
+      if (artifactsGrid[x - i][y - j] != "bitcoin" && artifactsGrid[x - i][y - j] != "poop" && artifactsGrid[x - i][y - j] != "portalGun") {
         return true;
       }
       else {
@@ -70,19 +70,19 @@ function displayArtifactsGrid() {
   fill(40, 22, 11);
   for (let x = 0; x < cols; x++) {
     for (let y = 0; y < rows; y++) {
-      if (grid[x][y] === 0) {
+      if (artifactsGrid[x][y] === 0) {
         // rect(x * cellSize, y * cellSize, cellSize, cellSize);
-      } else if (grid[x][y] === "bitcoin") {
+      } else if (artifactsGrid[x][y] === "bitcoin") {
         // rect(x * cellSize, y * cellSize, cellSize, cellSize);
         image(bitcoin, x * cellSize, y * cellSize, cellSize, cellSize);
-      } else if (grid[x][y] === "portalGun") {
+      } else if (artifactsGrid[x][y] === "portalGun") {
         // rect(x * cellSize, y * cellSize, cellSize, cellSize);
         if (x * cellSize - cellSize >= 0) {
-          if (grid[x - 1][y] >= 0 && grid[x - 1][y] != "bitcoin" && grid[x - 1][y] != "poop" && grid[x - 1][y] != "portalGun") {
+          if (artifactsGrid[x - 1][y] >= 0 && artifactsGrid[x - 1][y] != "bitcoin" && artifactsGrid[x - 1][y] != "poop" && artifactsGrid[x - 1][y] != "portalGun") {
             image(portalGun, x * cellSize - cellSize, y * cellSize, cellSize * 2, cellSize);
           }
         }
-      } else if (grid[x][y] === "poop") {
+      } else if (artifactsGrid[x][y] === "poop") {
         // rect(x * cellSize, y * cellSize, cellSize, cellSize);
         image(poop, x * cellSize, y * cellSize, cellSize, cellSize);
       }
