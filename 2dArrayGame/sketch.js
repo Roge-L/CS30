@@ -4,11 +4,12 @@
 
 // global variables
 
-let artifactsGrid;
+let artifactsGrid, dirtGrid;
 let cols, rows;
 let cellSize;
 let bitcoin, portalGun, poop, tRex;
 let artifactX, artifactY;
+let dirtX, dirtY;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
@@ -24,15 +25,20 @@ function setup() {
   cols = 10;
   rows = 10;
   artifactsGrid = artifactsGridCreation(cols, rows);
+  dirtGrid = createDirtLayer(cols, rows);
   cellSize = 60;
   artifactX = 0;
   artifactY = 0;
+  dirtX = 0;
+  dirtY = 0;
 }
 
 // a loop that executes given actions according to your fps
 function draw() {
   background(255);
   displayArtifactsGrid();
+  createDirtLayer();
+  displayDirtLayer();
 }
 
 function artifactsGridCreation(cols, rows) {
@@ -54,30 +60,26 @@ function artifactsGridCreation(cols, rows) {
   return randomGrid;
 }
 
-function checkDinoSurroundings() {
-  for (let i = 1; i < 4; i++) {
-    for (let j = 1; i < 4; j++) {
-      if (artifactsGrid[artifactX - i][artifactY - j] != "bitcoin" && artifactsGrid[artifactX - i][artifactY - j] != "poop" && artifactsGrid[artifactX - i][artifactY - j] != "portalGun") {
-        return true;
-      }
-      else {
-        return false;
-      }
-    }
-  }
-}
+// function checkDinoSurroundings() {
+//   for (let i = 1; i < 4; i++) {
+//     for (let j = 1; i < 4; j++) {
+//       if (artifactsGrid[artifactX - i][artifactY - j] != "bitcoin" && artifactsGrid[artifactX - i][artifactY - j] != "poop" && artifactsGrid[artifactX - i][artifactY - j] != "portalGun") {
+//         return true;
+//       }
+//       else {
+//         return false;
+//       }
+//     }
+//   }
+// }
 
 function displayArtifactsGrid() {
   fill(40, 22, 11);
   for (artifactX = 0; artifactX < cols; artifactX++) {
     for (artifactY = 0; artifactY < rows; artifactY++) {
-      if (artifactsGrid[artifactX][artifactY] === 0) {
-        // rect(x * cellSize, y * cellSize, cellSize, cellSize);
-      } else if (artifactsGrid[artifactX][artifactY] === "bitcoin") {
-        // rect(x * cellSize, y * cellSize, cellSize, cellSize);
+      if (artifactsGrid[artifactX][artifactY] === "bitcoin") {
         image(bitcoin, artifactX * cellSize, artifactY * cellSize, cellSize, cellSize);
       } else if (artifactsGrid[artifactX][artifactY] === "portalGun") {
-        // rect(x * cellSize, y * cellSize, cellSize, cellSize);
         if (artifactX * cellSize - cellSize >= 0) {
           if (artifactsGrid[artifactX - 1][artifactY] >= 0 && artifactsGrid[artifactX - 1][artifactY] != "bitcoin" && artifactsGrid[artifactX - 1][artifactY] != "poop" && artifactsGrid[artifactX - 1][artifactY] != "portalGun") {
             image(portalGun, artifactX * cellSize - cellSize, artifactY * cellSize, cellSize * 2, cellSize);
@@ -87,15 +89,42 @@ function displayArtifactsGrid() {
           }
         }
       } else if (artifactsGrid[artifactX][artifactY] === "poop") {
-        // rect(x * cellSize, y * cellSize, cellSize, cellSize);
         image(poop, artifactX * cellSize, artifactY * cellSize, cellSize, cellSize);
       }
     }
   }
 }
 
+function createDirtLayer(cols, rows) {
+  let grid = [];
+  for (let x = 0; x < cols; x++) {
+    grid.push([]);
+    for (let y = 0; y < rows; y++) {
+      grid[x].push(true);
+    }
+  }
+  return grid;
+}
+
 function displayDirtLayer() {
   fill(85, 64, 16);
+  for (dirtX = 0; dirtX < cols; dirtX++) {
+    for (dirtY = 0; dirtY < rows; dirtY++) {
+      if (dirtGrid[dirtX][dirtY] === true) {
+        rect(dirtX * cellSize, dirtY * cellSize, cellSize, cellSize);
+      }
+      else {
+        continue;
+      }
+    }
+  }
+}
+
+function mouseClicked() {
+  let x = mouseX / cellSize;
+  let y = mouseY / cellSize;
+
+  dirtGrid[floor(x)][floor(y)] = false;
 }
 
 // you are broke.
