@@ -2,19 +2,21 @@
 // Roger Lam
 // April 6, 2018
 
-// global variables
+// you are broke.
+// one day you go into your backyard and something is sticking out of the ground...
+// turns out there are all sorts of things in your backyard, including ancient artifacts and other valuable items
 
+// global variables
 let artifactsGrid, dirtGrid;
 let cols, rows;
 let cellSize;
 let bitcoin, portalGun, poop, tRex;
 let artifactX, artifactY;
 let dirtX, dirtY;
-let squareX, squareY;
-let uncover;
+let timeNow, timeUntilUncover;
+let clickedX, clickedY;
 
-// the setup function will only run once (before the draw loop begins)
-// this is where you want to set up the environment (size of canvas, etc)
+// the preload function loads any wanted assets onto the canvas
 function preload() {
   bitcoin = loadImage("assets/images/bitcoin.png");
   portalGun = loadImage("assets/images/portalGun.png");
@@ -22,19 +24,19 @@ function preload() {
   tRex = loadImage("assets/images/tRex.png");
 }
 
+// the setup function will only run once (before the draw loop begins)
+// this is where you want to set up the environment (size of canvas, etc)
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  cols = 10;
-  rows = 10;
+  cols = 15;
+  rows = 12;
   artifactsGrid = artifactsGridCreation(cols, rows);
   dirtGrid = createDirtLayer(cols, rows);
   cellSize = 60;
+  createCanvas(cellSize * cols, cellSize * rows);
   artifactX = 0;
   artifactY = 0;
   dirtX = 0;
   dirtY = 0;
-  squareX = mouseX / cellSize;
-  squareY = mouseY / cellSize;
 }
 
 // a loop that executes given actions according to your fps
@@ -43,8 +45,11 @@ function draw() {
   displayArtifactsGrid();
   createDirtLayer();
   displayDirtLayer();
+  timeNow = millis();
+  uncoverDirt();
 }
 
+// this function creates a 2d array that randomizes items around the map, then returns that array
 function artifactsGridCreation(cols, rows) {
   let randomGrid = [];
   for (let x = 0; x < cols; x++) {
@@ -77,6 +82,7 @@ function artifactsGridCreation(cols, rows) {
 //   }
 // }
 
+// this function draws the assets from the created 2d array from the artifactsGridCreation function
 function displayArtifactsGrid() {
   fill(40, 22, 11);
   for (artifactX = 0; artifactX < cols; artifactX++) {
@@ -99,6 +105,7 @@ function displayArtifactsGrid() {
   }
 }
 
+// this function creates a 2d array with only one item...the dirt
 function createDirtLayer(cols, rows) {
   let grid = [];
   for (let x = 0; x < cols; x++) {
@@ -110,6 +117,7 @@ function createDirtLayer(cols, rows) {
   return grid;
 }
 
+// this function draws the dirt, it goes over the artifacts and it functions with a boolean-oriented system
 function displayDirtLayer() {
   fill(85, 64, 16);
   for (dirtX = 0; dirtX < cols; dirtX++) {
@@ -124,19 +132,27 @@ function displayDirtLayer() {
   }
 }
 
-function mousePressed() {
-  setTimeout(dirtGrid[floor(squareX)][floor(squareY)] = false, 2000);
+// when the mouse is clicked, set the time when
+function mouseClicked() {
+  timeUntilUncover = millis() + 3000;
+  clickedX = mouseX / cellSize;
+  clickedY = mouseY / cellSize;
 }
 
-// you are broke.
-// one day you go into your backyard and something is sticking out of the ground...
-// turns out there are all sorts of things in your backyard, including ancient artifacts and other valuable items
+// uncover the dirt block based on mouse coordinate after n seconds
+function uncoverDirt() {
+  if (timeNow > timeUntilUncover) {
+    dirtGrid[floor(clickedX)][floor(clickedY)] = false;
+    timeUntilUncover = undefined;
+  }
+}
 
 // NEEDS:
 // 2d grid
 // random items
-// timer for each square, starts counting down when player uncovers it
-// reward system/inventory system
+// timer for square, starts counting down when player uncovers it  REFURBISH THIS
+// reward system/inventory system    FINISH THIS
+// ADD DINOSAUR BONES MANE
 
 // WANTS:
 // title screen
