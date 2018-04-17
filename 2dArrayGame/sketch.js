@@ -10,6 +10,8 @@ let cellSize;
 let bitcoin, portalGun, poop, tRex;
 let artifactX, artifactY;
 let dirtX, dirtY;
+let squareX, squareY;
+let uncover;
 
 // the setup function will only run once (before the draw loop begins)
 // this is where you want to set up the environment (size of canvas, etc)
@@ -31,6 +33,8 @@ function setup() {
   artifactY = 0;
   dirtX = 0;
   dirtY = 0;
+  squareX = mouseX / cellSize;
+  squareY = mouseY / cellSize;
 }
 
 // a loop that executes given actions according to your fps
@@ -120,11 +124,8 @@ function displayDirtLayer() {
   }
 }
 
-function mouseClicked() {
-  let x = mouseX / cellSize;
-  let y = mouseY / cellSize;
-
-  dirtGrid[floor(x)][floor(y)] = false;
+function mousePressed() {
+  setTimeout(dirtGrid[floor(squareX)][floor(squareY)] = false, 2000);
 }
 
 // you are broke.
