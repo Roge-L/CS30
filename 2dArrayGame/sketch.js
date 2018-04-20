@@ -1,8 +1,6 @@
-// Archeology Game
+// Backyard Archeology
 // Roger Lam
 // April 6, 2018
-
-// FIX MUSIC AND SOUNDS
 
 // you are broke.
 // one day you go into your backyard and something is sticking out of the ground...
@@ -36,13 +34,15 @@ function preload() {
   ring = loadImage("assets/images/ring.png");
   lol = loadImage("assets/images/lol.png");
 
-  digSound = loadSound("assets/sounds/dig.mp3");
-  bitcoinSound = loadSound("assets/sounds/coin.mp3");
+  bgMusic = loadSound("assets/music/bgMusic.mp3");
+
+  digSound = loadSound("assets/sounds/dig.ogg");
+  bitcoinSound = loadSound("assets/sounds/coinSound.mp3");
   portalGunSound = loadSound("assets/sounds/portalGun.mp3");
   poopSound = loadSound("assets/sounds/poop.mp3");
   bombSound = loadSound("assets/sounds/bomb.mp3");
   juniorChickenSound = loadSound("assets/sounds/juniorChicken.mp3");
-  ringSound = loadSound("assets/sounds/coin.mp3");
+  ringSound = loadSound("assets/sounds/coinSound.mp3");
 
   purchaseSound = loadSound("assets/sounds/purchase.mp3");
   lolSound = loadSound("assets/sounds/lol.mp3");
@@ -81,6 +81,7 @@ function setup() {
   juniorChickenPrice = 10000;
   ringPrice = 50000;
 
+  bgMusic.setVolume(1);
   bgMusic.loop();
 }
 
@@ -91,9 +92,12 @@ function draw() {
   createDirtLayer();
   displayDirtLayer();
   timeNow = millis();
+
+  // if player lost, draws game over screen
   if (state === 2) {
     gameOver();
   }
+
   uncoverDirt();
   displayPoints();
   displayTheShop();
@@ -181,7 +185,7 @@ function displayDirtLayer() {
   }
 }
 
-// when the mouse is clicked, set the time when
+// when the mouse is clicked, uncover dirt, check for purchase, check if player is trolled
 function mouseClicked() {
   clickedX = mouseX / cellSize;
   clickedY = mouseY / cellSize;
@@ -195,6 +199,9 @@ function mouseClicked() {
     salesSkills();
     resetMap();
   }
+  if (trolled === true) {
+    lolSound.loop();
+  }
 }
 
 // uncover the dirt block based on mouse coordinate after n seconds
@@ -206,6 +213,7 @@ function uncoverDirt() {
   }
 }
 
+// function that checks if item is found
 function checkForItems() {
   if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "bitcoin") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
@@ -220,6 +228,7 @@ function checkForItems() {
     portalGunSound.play();
     points += portalGunPrice;
   } else if (artifactsGrid[floor(clickedX)][floor(clickedY)] === "bomb") {
+    bombSound.play();
     gameOver();
   } else if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "juniorChicken") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
@@ -234,6 +243,7 @@ function checkForItems() {
   }
 }
 
+// function that displays the points
 function displayPoints() {
   textSize(22);
   fill(255, 215, 0);
@@ -241,20 +251,23 @@ function displayPoints() {
   text(points, cols * cellSize + cellSize * 0.15, cellSize * 0.85);
 }
 
+// the game over screen
 function gameOver() {
   state = 2;
-  bombSound.play();
   textSize(54);
   fill(255, 0, 0);
   text("GAME OVER", 300, 300);
   text("You made $" + points, 250, 375);
 }
 
+// function that draws the shop
 function displayTheShop() {
   fill(142, 131, 105);
   rect(cols * cellSize, 3 * cellSize, 2 * cellSize, 3 * cellSize);
   rect(cols * cellSize, 6 * cellSize, 2 * cellSize, 3 * cellSize);
   rect(cols * cellSize, 9 * cellSize, 2 * cellSize, 3 * cellSize);
+
+  // if mouse hovered over, darken button
   if (mouseX > cols * cellSize && mouseX < width && mouseY > 3 * cellSize && mouseY < 6 * cellSize) {
     fill(138, 87, 21);
     rect(cols * cellSize, 3 * cellSize, 2 * cellSize, 3 * cellSize);
@@ -267,6 +280,7 @@ function displayTheShop() {
     fill(138, 87, 21);
     rect(cols * cellSize, 9 * cellSize, 2 * cellSize, 3 * cellSize);
   }
+
   textSize(22);
   fill("white");
   text("The Shop", cols * cellSize + cellSize * 0.20, cellSize * 2.80);
@@ -288,6 +302,7 @@ function displayTheShop() {
   text("$" + resetMapPrice, cols * cellSize + cellSize * 0.15, cellSize * 10.80);
 }
 
+// function that executes when mystery item is purchased
 function mysteryItem() {
   if (mouseX > cols * cellSize && mouseX < width && mouseY > 3 * cellSize && mouseY < 6 * cellSize) {
     if (points >= mysteryItemPrice) {
@@ -298,16 +313,19 @@ function mysteryItem() {
   }
 }
 
+// function that executes when sales skills item is purchased
 function salesSkills() {
   if (mouseX > cols * cellSize && mouseX < width && mouseY > 6 * cellSize && mouseY < 9 * cellSize) {
     if (points >= salesSkillsPrice && boughtSalesSkills === false) {
       points = points - salesSkillsPrice;
+      purchaseSound.play();
       boughtSalesSkills = true;
       doubleMoney();
     }
   }
 }
 
+// function that executes when the sales skills function is executed, doubles the value of the items
 function doubleMoney() {
   bitcoinPrice = bitcoinPrice * 2;
   poopPrice = poopPrice * 2;
@@ -316,19 +334,21 @@ function doubleMoney() {
   ringPrice = ringPrice * 2;
 }
 
+// function that executes when reset map is purchased
 function resetMap() {
   if (mouseX > cols * cellSize && mouseX < width && mouseY > 9 * cellSize && mouseY < height) {
     if (points >= resetMapPrice) {
       points = points - resetMapPrice;
+      purchaseSound.play();
       artifactsGrid = artifactsGridCreation(cols, rows);
       dirtGrid = createDirtLayer(cols, rows);
     }
   }
 }
 
+// function that draws Yao Mings' in random locations
 function troll() {
   if (trolled === true) {
-    lolSound.loop();
-    image(lol, random(cols * cellSize), random(rows * cellSize), lol.width * 0.1, lol.height * 0.10);
+    image(lol, random(cols * cellSize), random(rows * cellSize), lol.width * 0.1, lol.height * 0.1);
   }
 }
