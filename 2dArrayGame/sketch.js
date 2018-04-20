@@ -2,6 +2,9 @@
 // Roger Lam
 // April 6, 2018
 
+// ADD LOCAL STORAGE
+// FIX MUSIC AND SOUNDS
+
 // you are broke.
 // one day you go into your backyard and something is sticking out of the ground...
 // turns out there are all sorts of things in your backyard, including ancient artifacts and other valuable items
@@ -21,7 +24,7 @@ let mysteryItemPrice, salesSkillsPrice, resetMapPrice, boughtSalesSkills;
 let bitcoinPrice, poopPrice, portalGunPrice, juniorChickenPrice, ringPrice;
 let state;
 let trolled;
-let digSound, lolSound, purchaseSound;
+// let bgMusic, digSound, bitcoinSound, portalGunSound, poopSound, bombSound, lolSound, juniorChickenSound, ringSound, purchaseSound;
 
 // the preload function loads any wanted assets onto the canvas
 function preload() {
@@ -34,9 +37,16 @@ function preload() {
   ring = loadImage("assets/images/ring.png");
   lol = loadImage("assets/images/lol.png");
 
-  digSound = loadSound("assets/sounds/dig.mp3");
-  purchaseSound = loadSound("assets/sounds/purchase.mp3");
-  lolSound = loadSound("assets/sounds/lol.mp3");
+  // digSound = loadSound("assets/sounds/dig.mp3");
+  // bitcoinSound = loadSound("assets/sounds/coin.mp3");
+  // portalGunSound = loadSound("assets/sounds/portalGun.mp3");
+  // poopSound = loadSound("assets/sounds/poop.mp3");
+  // bombSound = loadSound("assets/sounds/bomb.mp3");
+  // juniorChickenSound = loadSound("assets/sounds/juniorChicken.mp3");
+  // ringSound = loadSound("assets/sounds/coin.mp3");
+
+  // purchaseSound = loadSound("assets/sounds/purchase.mp3");
+  // lolSound = loadSound("assets/sounds/lol.mp3");
 }
 
 // the setup function will only run once (before the draw loop begins)
@@ -56,7 +66,8 @@ function setup() {
   dirtX = 0;
   dirtY = 0;
 
-  points = 10000000;
+  points = 0;
+
   mysteryItemPrice = 100000;
   salesSkillsPrice = 300000;
   resetMapPrice = 500000;
@@ -70,6 +81,8 @@ function setup() {
   portalGunPrice = 50000;
   juniorChickenPrice = 10000;
   ringPrice = 50000;
+
+  // bgMusic.loop();
 }
 
 // a loop that executes given actions according to your fps
@@ -174,7 +187,7 @@ function mouseClicked() {
   clickedX = mouseX / cellSize;
   clickedY = mouseY / cellSize;
   if (state === 1 && mouseX < cols * cellSize) {
-    timeUntilUncover = millis() + 500;
+    timeUntilUncover = millis() + 400;
     uncoverDirt();
     checkForItems();
   }
@@ -189,6 +202,7 @@ function mouseClicked() {
 function uncoverDirt() {
   if (timeNow > timeUntilUncover) {
     dirtGrid[floor(clickedX)][floor(clickedY)] = false;
+    // digSound.play();
     timeUntilUncover = undefined;
   }
 }
@@ -196,20 +210,25 @@ function uncoverDirt() {
 function checkForItems() {
   if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "bitcoin") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
+    // bitcoinSound.play();
     points += bitcoinPrice;
   } else if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "poop") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
+    // poopSound.play();
     points += poopPrice;
   } else if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && dirtGrid[floor(clickedX) - 1][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "portalGun") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
+    // portalGunSound.play();
     points += portalGunPrice;
   } else if (artifactsGrid[floor(clickedX)][floor(clickedY)] === "bomb") {
     gameOver();
   } else if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "juniorChicken") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
+    // juniorChickenSound.play();
     points += juniorChickenPrice;
   } else if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "ring") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
+    // ringSound.play();
     points += ringPrice;
   } else {
     displayPoints();
@@ -225,11 +244,11 @@ function displayPoints() {
 
 function gameOver() {
   state = 2;
+  // bombSound.play();
   textSize(54);
   fill(255, 0, 0);
   text("GAME OVER", 300, 300);
   text("You made $" + points, 250, 375);
-  text("F5 TO RESTART", 258, 450);
 }
 
 function displayTheShop() {
@@ -237,6 +256,18 @@ function displayTheShop() {
   rect(cols * cellSize, 3 * cellSize, 2 * cellSize, 3 * cellSize);
   rect(cols * cellSize, 6 * cellSize, 2 * cellSize, 3 * cellSize);
   rect(cols * cellSize, 9 * cellSize, 2 * cellSize, 3 * cellSize);
+  if (mouseX > cols * cellSize && mouseX < width && mouseY > 3 * cellSize && mouseY < 6 * cellSize) {
+    fill(138, 87, 21);
+    rect(cols * cellSize, 3 * cellSize, 2 * cellSize, 3 * cellSize);
+  }
+  if (mouseX > cols * cellSize && mouseX < width && mouseY > 6 * cellSize && mouseY < 9 * cellSize) {
+    fill(138, 87, 21);
+    rect(cols * cellSize, 6 * cellSize, 2 * cellSize, 3 * cellSize);
+  }
+  if (mouseX > cols * cellSize && mouseX < width && mouseY > 9 * cellSize && mouseY < height) {
+    fill(138, 87, 21);
+    rect(cols * cellSize, 9 * cellSize, 2 * cellSize, 3 * cellSize);
+  }
   textSize(22);
   fill("white");
   text("The Shop", cols * cellSize + cellSize * 0.20, cellSize * 2.80);
@@ -259,18 +290,22 @@ function displayTheShop() {
 }
 
 function mysteryItem() {
-  if (mouseX > cols * cellSize && mouseX < width && mouseY > 3 * cellSize && mouseY < 6 * cellSize && points >= mysteryItemPrice) {
-    points = points - mysteryItemPrice;
-    trolled = true;
-    gameOver();
+  if (mouseX > cols * cellSize && mouseX < width && mouseY > 3 * cellSize && mouseY < 6 * cellSize) {
+    if (points >= mysteryItemPrice) {
+      points = points - mysteryItemPrice;
+      trolled = true;
+      gameOver();
+    }
   }
 }
 
 function salesSkills() {
-  if (mouseX > cols * cellSize && mouseX < width && mouseY > 6 * cellSize && mouseY < 9 * cellSize && points >= salesSkillsPrice && boughtSalesSkills === false) {
-    points = points - salesSkillsPrice;
-    boughtSalesSkills = true;
-    doubleMoney();
+  if (mouseX > cols * cellSize && mouseX < width && mouseY > 6 * cellSize && mouseY < 9 * cellSize) {
+    if (points >= salesSkillsPrice && boughtSalesSkills === false) {
+      points = points - salesSkillsPrice;
+      boughtSalesSkills = true;
+      doubleMoney();
+    }
   }
 }
 
@@ -278,19 +313,23 @@ function doubleMoney() {
   bitcoinPrice = bitcoinPrice * 2;
   poopPrice = poopPrice * 2;
   portalGunPrice = portalGunPrice * 2;
+  juniorChickenPrice = juniorChickenPrice * 2;
+  ringPrice = ringPrice * 2;
 }
 
 function resetMap() {
-  if (mouseX > cols * cellSize && mouseX < width && mouseY > 9 * cellSize && mouseY < height && points >= resetMapPrice) {
-    points = points - resetMapPrice;
-    artifactsGrid = artifactsGridCreation(cols, rows);
+  if (mouseX > cols * cellSize && mouseX < width && mouseY > 9 * cellSize && mouseY < height) {
+    if (points >= resetMapPrice) {
+      points = points - resetMapPrice;
+      artifactsGrid = artifactsGridCreation(cols, rows);
+      dirtGrid = createDirtLayer(cols, rows);
+    }
   }
 }
 
 function troll() {
   if (trolled === true) {
+    // lolSound.loop();
     image(lol, random(cols * cellSize), random(rows * cellSize), lol.width * 0.1, lol.height * 0.10);
   }
 }
-
-// music/sounds
