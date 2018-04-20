@@ -2,7 +2,6 @@
 // Roger Lam
 // April 6, 2018
 
-// ADD LOCAL STORAGE
 // FIX MUSIC AND SOUNDS
 
 // you are broke.
@@ -24,7 +23,7 @@ let mysteryItemPrice, salesSkillsPrice, resetMapPrice, boughtSalesSkills;
 let bitcoinPrice, poopPrice, portalGunPrice, juniorChickenPrice, ringPrice;
 let state;
 let trolled;
-// let bgMusic, digSound, bitcoinSound, portalGunSound, poopSound, bombSound, lolSound, juniorChickenSound, ringSound, purchaseSound;
+let bgMusic, digSound, bitcoinSound, portalGunSound, poopSound, bombSound, lolSound, juniorChickenSound, ringSound, purchaseSound;
 
 // the preload function loads any wanted assets onto the canvas
 function preload() {
@@ -37,16 +36,16 @@ function preload() {
   ring = loadImage("assets/images/ring.png");
   lol = loadImage("assets/images/lol.png");
 
-  // digSound = loadSound("assets/sounds/dig.mp3");
-  // bitcoinSound = loadSound("assets/sounds/coin.mp3");
-  // portalGunSound = loadSound("assets/sounds/portalGun.mp3");
-  // poopSound = loadSound("assets/sounds/poop.mp3");
-  // bombSound = loadSound("assets/sounds/bomb.mp3");
-  // juniorChickenSound = loadSound("assets/sounds/juniorChicken.mp3");
-  // ringSound = loadSound("assets/sounds/coin.mp3");
+  digSound = loadSound("assets/sounds/dig.mp3");
+  bitcoinSound = loadSound("assets/sounds/coin.mp3");
+  portalGunSound = loadSound("assets/sounds/portalGun.mp3");
+  poopSound = loadSound("assets/sounds/poop.mp3");
+  bombSound = loadSound("assets/sounds/bomb.mp3");
+  juniorChickenSound = loadSound("assets/sounds/juniorChicken.mp3");
+  ringSound = loadSound("assets/sounds/coin.mp3");
 
-  // purchaseSound = loadSound("assets/sounds/purchase.mp3");
-  // lolSound = loadSound("assets/sounds/lol.mp3");
+  purchaseSound = loadSound("assets/sounds/purchase.mp3");
+  lolSound = loadSound("assets/sounds/lol.mp3");
 }
 
 // the setup function will only run once (before the draw loop begins)
@@ -82,7 +81,7 @@ function setup() {
   juniorChickenPrice = 10000;
   ringPrice = 50000;
 
-  // bgMusic.loop();
+  bgMusic.loop();
 }
 
 // a loop that executes given actions according to your fps
@@ -202,7 +201,7 @@ function mouseClicked() {
 function uncoverDirt() {
   if (timeNow > timeUntilUncover) {
     dirtGrid[floor(clickedX)][floor(clickedY)] = false;
-    // digSound.play();
+    digSound.play();
     timeUntilUncover = undefined;
   }
 }
@@ -210,25 +209,25 @@ function uncoverDirt() {
 function checkForItems() {
   if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "bitcoin") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
-    // bitcoinSound.play();
+    bitcoinSound.play();
     points += bitcoinPrice;
   } else if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "poop") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
-    // poopSound.play();
+    poopSound.play();
     points += poopPrice;
   } else if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && dirtGrid[floor(clickedX) - 1][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "portalGun") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
-    // portalGunSound.play();
+    portalGunSound.play();
     points += portalGunPrice;
   } else if (artifactsGrid[floor(clickedX)][floor(clickedY)] === "bomb") {
     gameOver();
   } else if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "juniorChicken") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
-    // juniorChickenSound.play();
+    juniorChickenSound.play();
     points += juniorChickenPrice;
   } else if (dirtGrid[floor(clickedX)][floor(clickedY)] === false && artifactsGrid[floor(clickedX)][floor(clickedY)] === "ring") {
     artifactsGrid[floor(clickedX)][floor(clickedY)] = 0;
-    // ringSound.play();
+    ringSound.play();
     points += ringPrice;
   } else {
     displayPoints();
@@ -244,7 +243,7 @@ function displayPoints() {
 
 function gameOver() {
   state = 2;
-  // bombSound.play();
+  bombSound.play();
   textSize(54);
   fill(255, 0, 0);
   text("GAME OVER", 300, 300);
@@ -329,7 +328,7 @@ function resetMap() {
 
 function troll() {
   if (trolled === true) {
-    // lolSound.loop();
+    lolSound.loop();
     image(lol, random(cols * cellSize), random(rows * cellSize), lol.width * 0.1, lol.height * 0.10);
   }
 }
